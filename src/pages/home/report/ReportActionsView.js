@@ -65,11 +65,17 @@ class ReportActionsView extends React.Component {
 
         // We need this.sortedAndFilteredReportActions to be set before this.state is initialized because the function to calculate the newMarkerReportActionID uses the sorted report actions
         this.sortedAndFilteredReportActions = this.getSortedReportActionsForDisplay(props.reportActions);
+        const reportActionId = ReportUtils.getNewMarkerReportActionID(this.props.report, this.sortedAndFilteredReportActions)
 
         this.state = {
             isFloatingMessageCounterVisible: false,
-            newMarkerReportActionID: ReportUtils.getNewMarkerReportActionID(this.props.report, this.sortedAndFilteredReportActions),
+            newMarkerReportActionID: reportActionId,
         };
+
+        console.log("AbdulTest ReportActionsView Constructor lastReadTime" + this.props.report.lastReadTime)
+        console.log("AbdulTest ReportActionsView Constructor sortedAndFilteredReportActions size " + this.sortedAndFilteredReportActions.length)
+        console.log("AbdulTest ReportActionsView Constructor newMarkerReportActionID " + reportActionId)
+
 
         this.currentScrollOffset = 0;
         this.mostRecentIOUReportActionID = ReportActionsUtils.getMostRecentIOUReportActionID(props.reportActions);
@@ -182,6 +188,7 @@ class ReportActionsView extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
+        console.log("AbdulTest ReportActionsView componentDidUpdate lastReadTime" + this.props.report.lastReadTime)
         const isReportFullyVisible = this.getIsReportFullyVisible();
 
         // When returning from offline to online state we want to trigger a request to OpenReport which
@@ -295,6 +302,7 @@ class ReportActionsView extends React.Component {
             return;
         }
 
+        console.log("AbdulTest ReportActionsView openReportIfNecessary triggering openReport")
         Report.openReport(this.props.report.reportID);
     }
 

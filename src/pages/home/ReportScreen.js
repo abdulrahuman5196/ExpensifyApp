@@ -162,6 +162,7 @@ class ReportScreen extends React.Component {
             return;
         }
 
+        console.log("AbdulTest ReportScreen fetchReportIfNeeded triggering openReport")
         Report.openReport(reportIDFromPath);
     }
 

@@ -395,6 +395,7 @@ function openReport(reportID, participantList = [], newReportObject = {}) {
         params.createdReportActionID = optimisticCreatedAction.reportActionID;
     }
 
+    console.log("AbdulTest OpenReport triggered")
     API.write('OpenReport', params, onyxData);
 }
 
