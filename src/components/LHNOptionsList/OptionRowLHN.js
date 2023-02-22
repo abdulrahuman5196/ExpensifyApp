@@ -97,6 +97,48 @@ const OptionRowLHN = (props) => {
 
     const avatarTooltips = !optionItem.isChatRoom && !optionItem.isArchivedRoom ? _.pluck(optionItem.displayNamesWithTooltips, 'tooltip') : undefined;
 
+    let valuesGoingTobeDisplayLength = [];
+    if (optionItem.isChatRoom || optionItem.isPolicyExpenseChat) {
+        valuesGoingTobeDisplayLength.push(optionItem.text.length);
+    }
+    if (optionItem.isChatRoom) {
+        valuesGoingTobeDisplayLength.push(optionItem.subtitle.length);
+    }
+    if (optionItem.alternateText && props.viewMode === CONST.OPTION_MODE.COMPACT) {
+        valuesGoingTobeDisplayLength.push(optionItem.alternateText.length * 1);
+    }
+
+    const normalizefunc = (enteredValue, minEntry, maxEntry, normalizedMin, normalizedMax) => {
+        if (maxEntry === minEntry) {
+            return normalizedMin;
+        }
+        const mx = (enteredValue - minEntry) / (maxEntry - minEntry);
+        const preshiftNormalized = mx * (normalizedMax - normalizedMin);
+        const shiftedNormalized = preshiftNormalized + normalizedMin;
+        return shiftedNormalized;
+    };
+
+    const getNormalizedValue = (textLength) => {
+        if (valuesGoingTobeDisplayLength.length === 1 || textLength <= 10) {
+            return 0;
+        }
+        if (valuesGoingTobeDisplayLength.length === 0) {
+            return 1;
+        }
+        const result = normalizefunc(textLength, Math.min(...valuesGoingTobeDisplayLength), Math.max(...valuesGoingTobeDisplayLength), 1, 4);
+        return _.isNaN(result) ? 1 : result;
+    };
+
+    const alternateTextView = optionItem.alternateText ? (
+        <Text
+            style={[...alternateTextStyle, props.viewMode === CONST.OPTION_MODE.COMPACT ? {flexShrink: getNormalizedValue(optionItem.alternateText.length * 1)} : {}]}
+            numberOfLines={1}
+            accessibilityLabel="Last chat message preview"
+        >
+            {optionItem.alternateText}
+        </Text>
+    ) : null;
+
     return (
         <OfflineWithFeedback
             pendingAction={optionItem.pendingAction}
@@ -172,26 +214,19 @@ const OptionRowLHN = (props) => {
                                             displayNamesWithTooltips={optionItem.displayNamesWithTooltips}
                                             tooltipEnabled
                                             numberOfLines={1}
-                                            textStyles={displayNameStyle}
+                                            textStyles={[...displayNameStyle, {flexShrink: getNormalizedValue(optionItem.text.length)}]}
                                             shouldUseFullTitle={optionItem.isChatRoom || optionItem.isPolicyExpenseChat}
                                         />
                                         {optionItem.isChatRoom && (
                                             <TextPill
-                                                style={textPillStyle}
+                                                style={[...textPillStyle, {flexShrink: getNormalizedValue(optionItem.subtitle.length)}]}
                                                 accessibilityLabel="Workspace name"
                                                 text={optionItem.subtitle}
                                             />
                                         )}
+                                        {props.viewMode === CONST.OPTION_MODE.COMPACT ? alternateTextView : null}
                                     </View>
-                                    {optionItem.alternateText ? (
-                                        <Text
-                                            style={alternateTextStyle}
-                                            numberOfLines={1}
-                                            accessibilityLabel="Last chat message preview"
-                                        >
-                                            {optionItem.alternateText}
-                                        </Text>
-                                    ) : null}
+                                    {props.viewMode !== CONST.OPTION_MODE.COMPACT ? alternateTextView : null}
                                 </View>
                                 {optionItem.descriptiveText ? (
                                     <View style={[styles.flexWrap]}>

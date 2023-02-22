@@ -1219,10 +1219,6 @@ const styles = {
     },
 
     optionDisplayNameCompact: {
-        minWidth: 'auto',
-        flexBasis: 'auto',
-        flexGrow: 0,
-        flexShrink: 0,
     },
 
     displayNameTooltipEllipsis: {
@@ -1238,9 +1234,6 @@ const styles = {
     },
 
     optionAlternateTextCompact: {
-        flexShrink: 1,
-        flexGrow: 1,
-        flexBasis: 'auto',
         ...optionAlternateTextPlatformStyles,
     },
 
