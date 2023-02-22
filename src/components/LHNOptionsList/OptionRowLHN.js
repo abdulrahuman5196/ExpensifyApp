@@ -97,6 +97,23 @@ const OptionRowLHN = (props) => {
 
     const avatarTooltips = !optionItem.isChatRoom && !optionItem.isArchivedRoom ? _.pluck(optionItem.displayNamesWithTooltips, 'tooltip') : undefined;
 
+    const getNormalizedValue = (textLength) => {
+        if (textLength <= 10) {
+            return 0;
+        }
+        return textLength;
+    };
+
+    const alternateTextView = optionItem.alternateText ? (
+        <Text
+            style={[...alternateTextStyle, props.viewMode === CONST.OPTION_MODE.COMPACT ? {flexShrink: getNormalizedValue(optionItem.alternateText.length * ( optionItem.alternateText.length > 50 ? 1 : 2))} : {}]}
+            numberOfLines={1}
+            accessibilityLabel="Last chat message preview"
+        >
+            {optionItem.alternateText}
+        </Text>
+    ) : null;
+
     return (
         <OfflineWithFeedback
             pendingAction={optionItem.pendingAction}
@@ -172,26 +189,19 @@ const OptionRowLHN = (props) => {
                                             displayNamesWithTooltips={optionItem.displayNamesWithTooltips}
                                             tooltipEnabled
                                             numberOfLines={1}
-                                            textStyles={displayNameStyle}
+                                            textStyles={[...displayNameStyle, {flexShrink: getNormalizedValue(optionItem.text.length)}]}
                                             shouldUseFullTitle={optionItem.isChatRoom || optionItem.isPolicyExpenseChat}
                                         />
                                         {optionItem.isChatRoom && (
                                             <TextPill
-                                                style={textPillStyle}
+                                                style={[...textPillStyle, {flexShrink: getNormalizedValue(optionItem.subtitle.length)}]}
                                                 accessibilityLabel="Workspace name"
                                                 text={optionItem.subtitle}
                                             />
                                         )}
+                                        {props.viewMode === CONST.OPTION_MODE.COMPACT ? alternateTextView : null}
                                     </View>
-                                    {optionItem.alternateText ? (
-                                        <Text
-                                            style={alternateTextStyle}
-                                            numberOfLines={1}
-                                            accessibilityLabel="Last chat message preview"
-                                        >
-                                            {optionItem.alternateText}
-                                        </Text>
-                                    ) : null}
+                                    {props.viewMode !== CONST.OPTION_MODE.COMPACT ? alternateTextView : null}
                                 </View>
                                 {optionItem.descriptiveText ? (
                                     <View style={[styles.flexWrap]}>
