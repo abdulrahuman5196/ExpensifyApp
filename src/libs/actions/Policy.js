@@ -1000,6 +1000,10 @@ function openWorkspaceInvitePage(policyID, clientMemberEmails) {
     });
 }
 
+function setWorkspaceInviteMembersDraft(policyID, memberEmails) {
+    Onyx.set(`${ONYXKEYS.COLLECTION.WORKSPACE_INVITE_MEMBERS_DRAFT}${policyID}`, memberEmails);
+}
+
 export {
     removeMembers,
     addMembersToWorkspace,
@@ -1027,4 +1031,5 @@ export {
     openWorkspaceMembersPage,
     openWorkspaceInvitePage,
     removeWorkspace,
+    setWorkspaceInviteMembersDraft,
 };
