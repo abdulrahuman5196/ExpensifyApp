@@ -170,6 +170,7 @@ class WorkspaceInviteMessagePage extends React.Component {
                     shouldShowGetAssistanceButton
                     guidesCallTaskID={CONST.GUIDES_CALL_TASK_IDS.WORKSPACE_MEMBERS}
                     shouldShowBackButton
+                    onCloseButtonPress={() => Navigation.dismissModal()}
                     onBackButtonPress={() => Navigation.goBack()}
                 />
                 <Form
@@ -180,20 +181,15 @@ class WorkspaceInviteMessagePage extends React.Component {
                     submitButtonText={this.props.translate('common.save')}
                     enabledWhenOffline
                 >
-                    <View style={[styles.mv2]}>
+                    <View style={[styles.mv4, styles.justifyContentCenter, styles.alignItemsCenter]}>
                         <MultipleAvatars
-                            size={CONST.AVATAR_SIZE.LARGE}
+                            size={CONST.AVATAR_SIZE.LARGE_BORDERED}
                             icons={this.getAvatars()}
                             shouldStackHorizontally
                             secondAvatarStyle={[
                                 styles.secondAvatarInline,
                             ]}
                             avatarTooltips={this.getAvatarTooltips()}
-                        />
-                        <Avatar
-                            imageStyles={[styles.avatarLarge]}
-                            source={this.getAvatars()[0]}
-                            size={CONST.AVATAR_SIZE.LARGE}
                         />
                     </View>
                     <View style={[styles.mb5]}>

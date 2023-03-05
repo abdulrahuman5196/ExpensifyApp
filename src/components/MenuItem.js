@@ -162,12 +162,12 @@ const MenuItem = (props) => {
                             </View>
                         )}
                         {!_.isEmpty(props.floatRightAvatars) && (
-                            <View style={[styles.justifyContentCenter, (props.brickRoadIndicator ? styles.mr4 : styles.mr3)]}>
+                            <View style={[styles.justifyContentCenter, (props.brickRoadIndicator ? styles.mr4 : undefined)]}>
                                 <MultipleAvatars
                                     isHovered={hovered}
                                     isPressed={pressed}
                                     icons={props.floatRightAvatars}
-                                    size={props.viewMode === CONST.OPTION_MODE.COMPACT ? CONST.AVATAR_SIZE.SMALL : CONST.AVATAR_SIZE.DEFAULT}
+                                    size={props.avatarSize ? props.avatarSize : (props.viewMode === CONST.OPTION_MODE.COMPACT ? CONST.AVATAR_SIZE.SMALL : CONST.AVATAR_SIZE.DEFAULT)}
                                     fallbackIcon={Expensicons.Workspace}
                                     shouldStackHorizontally={props.shouldStackHorizontally}
                                 />
