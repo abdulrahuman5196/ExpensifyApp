@@ -137,6 +137,22 @@ class WorkspaceInviteMessagePage extends React.Component {
                     onSubmit={this.onSubmit}
                     submitButtonText={this.props.translate('common.save')}
                     enabledWhenOffline
+                    footerContent={
+                        (
+                            <Pressable
+                                onPress={this.openPrivacyURL}
+                                accessibilityRole="link"
+                                href={CONST.PRIVACY_URL}
+                                style={[styles.mh5, styles.mb3, styles.alignSelfStart]}
+                            >
+                                <View style={[styles.flexRow]}>
+                                    <Text style={[styles.mr1, styles.label, styles.link]}>
+                                        {this.props.translate('common.privacy')}
+                                    </Text>
+                                </View>
+                            </Pressable>
+                        )
+                    }
                 >
                     <View style={[styles.mv4, styles.justifyContentCenter, styles.alignItemsCenter]}>
                         <MultipleAvatars
@@ -169,18 +185,6 @@ class WorkspaceInviteMessagePage extends React.Component {
                         />
                     </View>
                 </Form>
-                <Pressable
-                    onPress={this.openPrivacyURL}
-                    accessibilityRole="link"
-                    href={CONST.PRIVACY_URL}
-                    style={[styles.mh5, styles.mb2, styles.alignSelfStart]}
-                >
-                    <View style={[styles.flexRow]}>
-                        <Text style={[styles.mr1, styles.label, styles.link]}>
-                            {this.props.translate('common.privacy')}
-                        </Text>
-                    </View>
-                </Pressable>
             </ScreenWrapper>
         );
     }

@@ -76,6 +76,9 @@ const propTypes = {
     /** Container styles */
     style: stylePropTypes,
 
+    /** Custom content to display in the footer after submit button */
+    footerContent: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
+
     ...withLocalizePropTypes,
 };
 
@@ -90,6 +93,7 @@ const defaultProps = {
     isSubmitActionDangerous: false,
     scrollToOverflowEnabled: false,
     scrollContextEnabled: false,
+    footerContent: null,
     style: [],
 };
 
@@ -313,6 +317,7 @@ class Form extends React.Component {
                     disablePressOnEnter
                 />
                 )}
+                {this.props.footerContent}
             </FormSubmit>
         );
 
