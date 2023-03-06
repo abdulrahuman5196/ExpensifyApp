@@ -84,14 +84,21 @@ const MultipleAvatars = (props) => {
     const overlapSize = oneAvatarSize.width / 3;
 
     if (props.shouldStackHorizontally) {
+        let width;
+        const height = oneAvatarSize.height + (2 * oneAvatarBorderWidth);
         if (props.icons.length > 4) {
-            avatarContainerStyles = {width: ((oneAvatarSize.width * 3) + (oneAvatarBorderWidth * 8))};
+            width = (oneAvatarSize.width * 3) + (oneAvatarBorderWidth * 8);
         } else {
-            avatarContainerStyles = {width: (oneAvatarSize.width + (overlapSize * 2 * (props.icons.length - 1)) + (oneAvatarBorderWidth * (props.icons.length * 2)))};
+            width = oneAvatarSize.width + (overlapSize * 2 * (props.icons.length - 1)) + (oneAvatarBorderWidth * (props.icons.length * 2))
         }
-        avatarContainerStyles = {
-            ...avatarContainerStyles, height: oneAvatarSize, flexDirection: 'row', ...styles.alignItemsCenter,
-        };
+        avatarContainerStyles = StyleUtils.combineStyles([
+            styles.alignItemsCenter,
+            styles.flexRow,
+            {
+                width,
+                height,
+            },
+        ]);
     }
 
     return (
@@ -139,7 +146,14 @@ const MultipleAvatars = (props) => {
                                     {width: oneAvatarSize.width, height: oneAvatarSize.height},
                                 ]}
                             >
-                                <Text style={[styles.avatarInnerTextSmall, {fontSize: StyleUtils.getAvatarExtraFontSize(props.size)}]}>
+                                <Text
+                                    style={[
+                                        styles.avatarInnerTextSmall,
+                                        {
+                                            fontSize: StyleUtils.getAvatarExtraFontSize(props.size),
+                                        },
+                                    ]}
+                                >
                                     {`+${props.icons.length - 4}`}
                                 </Text>
                             </View>

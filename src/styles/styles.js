@@ -1753,14 +1753,7 @@ const styles = {
     },
 
     horizontalStackedAvatar4Overlay: {
-        // top: -107,
-        // left: 41,
-        // height: 28,
-        // width: 28,
-        // borderWidth: 2,
         borderStyle: 'solid',
-        // borderRadius: 24,
-        // zIndex: 6,
     },
 
     modalViewContainer: {

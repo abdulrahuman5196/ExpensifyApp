@@ -15,14 +15,10 @@ import ONYXKEYS from '../../ONYXKEYS';
 import * as Policy from '../../libs/actions/Policy';
 import TextInput from '../../components/TextInput';
 import MultipleAvatars from '../../components/MultipleAvatars';
-import Avatar from '../../components/Avatar';
-import * as OptionsListUtils from '../../libs/OptionsListUtils';
 import CONST from '../../CONST';
 import * as Link from '../../libs/actions/Link';
 import Text from '../../components/Text';
 import withPolicy, {policyPropTypes, policyDefaultProps} from './withPolicy';
-import {withNetwork} from '../../components/OnyxProvider';
-import networkPropTypes from '../../components/networkPropTypes';
 import * as ReportUtils from '../../libs/ReportUtils';
 import ROUTES from '../../ROUTES';
 import * as Localize from '../../libs/Localize';
@@ -41,8 +37,6 @@ const personalDetailsPropTypes = PropTypes.shape({
 });
 
 const propTypes = {
-    /** Beta features list */
-    betas: PropTypes.arrayOf(PropTypes.string).isRequired,
 
     /** All of the personal details for everyone */
     personalDetails: PropTypes.objectOf(personalDetailsPropTypes).isRequired,
@@ -60,7 +54,6 @@ const propTypes = {
 
     ...policyPropTypes,
     ...withLocalizePropTypes,
-    network: networkPropTypes.isRequired,
 };
 
 const defaultProps = policyDefaultProps;
@@ -69,72 +62,40 @@ class WorkspaceInviteMessagePage extends React.Component {
     constructor(props) {
         super(props);
 
-        this.getExcludedUsers = this.getExcludedUsers.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
+        this.validate = this.validate.bind(this);
         this.openPrivacyURL = this.openPrivacyURL.bind(this);
-
-        const {
-            personalDetails,
-            userToInvite,
-        } = OptionsListUtils.getMemberInviteOptions(
-            props.personalDetails,
-            props.betas,
-            '',
-            this.getExcludedUsers(),
-        );
         this.state = {
-            personalDetails,
-            selectedOptions: [],
-            userToInvite,
             welcomeNote: this.getWelcomeNote(),
         };
     }
 
-    componentDidMount() {
-        const clientPolicyMembers = _.keys(this.props.policyMemberList);
-        Policy.openWorkspaceInvitePage(this.props.route.params.policyID, clientPolicyMembers);
-    }
-
     componentDidUpdate(prevProps) {
         if (
-            prevProps.preferredLocale !== this.props.preferredLocale
+            !(prevProps.preferredLocale !== this.props.preferredLocale
             && this.state.welcomeNote === Localize.translate(prevProps.preferredLocale, 'workspace.inviteMessage.welcomeNote', {workspaceName: this.props.policy.name})
+            )
         ) {
-            this.setState({welcomeNote: this.getWelcomeNote()});
-        }
-
-        const isReconnecting = prevProps.network.isOffline && !this.props.network.isOffline;
-        if (!isReconnecting) {
             return;
         }
-
-        const clientPolicyMembers = _.keys(this.props.policyMemberList);
-        Policy.openWorkspaceInvitePage(this.props.route.params.policyID, clientPolicyMembers);
+        this.setState({welcomeNote: this.getWelcomeNote()});
     }
 
-    getExcludedUsers() {
-        const policyMemberList = lodashGet(this.props, 'policyMemberList', {});
-        const usersToExclude = _.filter(_.keys(policyMemberList), policyMember => (
-            this.props.network.isOffline
-            || policyMemberList[policyMember].pendingAction !== CONST.RED_BRICK_ROAD_PENDING_ACTION.DELETE
-            || !_.isEmpty(policyMemberList[policyMember].errors)
-        ));
-        return [...CONST.EXPENSIFY_EMAILS, ...usersToExclude];
-    }
-
-    /**
-     * Gets the welcome note default text
-     *
-     * @returns {Object}
-     */
-    getWelcomeNote() {
-        return this.props.translate('workspace.inviteMessage.welcomeNote', {
-            workspaceName: this.props.policy.name,
-        });
+    onSubmit() {
+        const filteredLogins = _.uniq(_.compact(_.map(this.props.invitedMembersDraft, login => login.toLowerCase().trim())));
+        Policy.addMembersToWorkspace(filteredLogins, this.state.welcomeNote || this.getWelcomeNote(), this.props.route.params.policyID);
+        Navigation.navigate(ROUTES.getWorkspaceMembersRoute(this.props.route.params.policyID));
     }
 
     getAvatars() {
         const filteredPersonalDetails = _.pick(this.props.personalDetails, this.props.invitedMembersDraft);
         return _.map(filteredPersonalDetails, personalDetail => ReportUtils.getAvatar(personalDetail.avatar, personalDetail.login));
+    }
+
+    getWelcomeNote() {
+        return this.props.translate('workspace.inviteMessage.welcomeNote', {
+            workspaceName: this.props.policy.name,
+        });
     }
 
     getAvatarTooltips() {
@@ -152,11 +113,7 @@ class WorkspaceInviteMessagePage extends React.Component {
      */
     validate() {
         // No validation required as the invite message is optional
-        return true;
-    }
-
-    onSubmit() {
-
+        return {};
     }
 
     render() {
@@ -183,7 +140,7 @@ class WorkspaceInviteMessagePage extends React.Component {
                 >
                     <View style={[styles.mv4, styles.justifyContentCenter, styles.alignItemsCenter]}>
                         <MultipleAvatars
-                            size={CONST.AVATAR_SIZE.LARGE_BORDERED}
+                            size={CONST.AVATAR_SIZE.LARGE}
                             icons={this.getAvatars()}
                             shouldStackHorizontally
                             secondAvatarStyle={[
@@ -207,6 +164,8 @@ class WorkspaceInviteMessagePage extends React.Component {
                             multiline
                             containerStyles={[styles.workspaceInviteWelcome]}
                             defaultValue={this.state.welcomeNote}
+                            value={this.state.welcomeNote}
+                            onChangeText={text => this.setState({welcomeNote: text})}
                         />
                     </View>
                 </Form>
@@ -233,13 +192,9 @@ WorkspaceInviteMessagePage.defaultProps = defaultProps;
 export default compose(
     withLocalize,
     withPolicy,
-    withNetwork(),
     withOnyx({
         personalDetails: {
             key: ONYXKEYS.PERSONAL_DETAILS,
-        },
-        betas: {
-            key: ONYXKEYS.BETAS,
         },
         invitedMembersDraft: {
             key: ({route}) => `${ONYXKEYS.COLLECTION.WORKSPACE_INVITE_MEMBERS_DRAFT}${route.params.policyID.toString()}`,
