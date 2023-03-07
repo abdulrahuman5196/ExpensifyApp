@@ -15,6 +15,7 @@ import codeStyles from './codeStyles';
 import visibility from './utilities/visibility';
 import writingDirection from './utilities/writingDirection';
 import optionAlternateTextPlatformStyles from './optionAlternateTextPlatformStyles';
+import emojiHeaderContainerPlatformStyles from './emojiHeaderContainerPlatformStyles';
 import pointerEventsNone from './pointerEventsNone';
 import pointerEventsAuto from './pointerEventsAuto';
 import overflowXHidden from './overflowXHidden';
@@ -567,7 +568,6 @@ const styles = {
             paddingRight: 17,
             paddingTop: 6,
             paddingBottom: 6,
-            borderRadius: variables.componentBorderRadius,
             borderWidth: 0,
             color: themeColors.text,
             height: 26,
@@ -592,7 +592,6 @@ const styles = {
             paddingTop: 6,
             paddingBottom: 6,
             borderWidth: 0,
-            borderRadius: variables.componentBorderRadius,
             color: themeColors.text,
             appearance: 'none',
             height: 26,
@@ -608,7 +607,6 @@ const styles = {
             paddingTop: 6,
             paddingBottom: 6,
             borderWidth: 0,
-            borderRadius: variables.componentBorderRadius,
             color: themeColors.text,
             height: 26,
             opacity: 1,
@@ -1005,35 +1003,18 @@ const styles = {
         width: variables.componentSizeNormal,
     },
 
-    statusIndicator: {
+    statusIndicator: (backgroundColor = themeColors.danger) => ({
         borderColor: themeColors.sidebar,
-        backgroundColor: themeColors.danger,
-        borderRadius: 6,
-        borderWidth: 2,
-        position: 'absolute',
-        right: -1,
-        bottom: -1,
-        height: 12,
-        width: 12,
-        zIndex: 10,
-    },
-
-    statusIndicatorLarge: {
-        borderColor: themeColors.componentBG,
-        backgroundColor: themeColors.danger,
+        backgroundColor,
         borderRadius: 8,
         borderWidth: 2,
         position: 'absolute',
-        right: 4,
-        bottom: 4,
+        right: -2,
+        top: -1,
         height: 16,
         width: 16,
         zIndex: 10,
-    },
-
-    statusIndicatorOnline: {
-        backgroundColor: themeColors.success,
-    },
+    }),
 
     avatarWithIndicator: {
         errorDot: {
@@ -1222,7 +1203,7 @@ const styles = {
         minWidth: 'auto',
         flexBasis: 'auto',
         flexGrow: 0,
-        flexShrink: 0,
+        flexShrink: 1,
     },
 
     displayNameTooltipEllipsis: {
@@ -1488,6 +1469,7 @@ const styles = {
         height: CONST.EMOJI_PICKER_HEADER_HEIGHT,
         justifyContent: 'center',
         width: '100%',
+        ...emojiHeaderContainerPlatformStyles,
     },
 
     emojiSkinToneTitle: {
@@ -1534,9 +1516,8 @@ const styles = {
     categoryShortcutButton: {
         flex: 1,
         borderRadius: 8,
-        paddingTop: 2,
-        paddingBottom: 2,
         height: CONST.EMOJI_PICKER_ITEM_HEIGHT,
+        alignItems: 'center',
         justifyContent: 'center',
     },
 
@@ -1551,6 +1532,7 @@ const styles = {
 
     editChatItemEmojiWrapper: {
         marginRight: 3,
+        alignSelf: 'flex-end',
     },
 
     hoveredButton: {
@@ -2799,7 +2781,8 @@ const styles = {
         borderRadius: 10,
         overflow: 'hidden',
         paddingVertical: 2,
-        flexShrink: 1,
+        flexShrink: 0,
+        maxWidth: variables.badgeMaxWidth,
         fontSize: variables.fontSizeSmall,
         ...spacing.ph2,
     },
@@ -2877,6 +2860,43 @@ const styles = {
         fontSize: variables.fontSizeXXLarge,
         letterSpacing: 4,
     },
+
+    footer: {
+        backgroundColor: themeColors.midtone,
+    },
+
+    footerWrapper: {
+        fontSize: variables.fontSizeNormal,
+        paddingTop: 64,
+        paddingHorizontal: 32,
+        maxWidth: 1100, // Match footer across all Expensify platforms
+    },
+
+    footerColumnsContainer: {
+        flex: 1,
+        flexWrap: 'wrap',
+        marginBottom: 40,
+        marginHorizontal: -16,
+    },
+
+    footerTitle: {
+        fontSize: variables.fontSizeLarge,
+        color: themeColors.success,
+        marginBottom: 16,
+    },
+
+    footerRow: {
+        paddingVertical: 4,
+        marginBottom: 8,
+        color: themeColors.textLight,
+        fontSize: variables.fontSizeMedium,
+    },
+
+    footerBottomLogo: {
+        marginTop: 40,
+        width: '100%',
+    },
+
 };
 
 export default styles;

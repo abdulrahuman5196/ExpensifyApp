@@ -10,10 +10,11 @@ import themeColors from '../styles/themes/default';
 import * as StyleUtils from '../styles/StyleUtils';
 import CONST from '../CONST';
 import variables from '../styles/variables';
+import avatarPropTypes from './avatarPropTypes';
 
 const propTypes = {
     /** Array of avatar URLs or icons */
-    icons: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.func])),
+    icons: PropTypes.arrayOf(avatarPropTypes),
 
     /** Set the size of avatars */
     size: PropTypes.oneOf(_.values(CONST.AVATAR_SIZE)),
@@ -70,9 +71,11 @@ const MultipleAvatars = (props) => {
             <View style={avatarContainerStyles}>
                 <Tooltip text={props.avatarTooltips[0]}>
                     <Avatar
-                        source={props.icons[0]}
+                        source={props.icons[0].source}
                         size={props.size}
                         fill={themeColors.iconSuccessFill}
+                        name={props.icons[0].name}
+                        type={props.icons[0].type}
                     />
                 </Tooltip>
             </View>
@@ -80,7 +83,7 @@ const MultipleAvatars = (props) => {
     }
 
     const oneAvatarSize = StyleUtils.getAvatarStyle(props.size);
-    const oneAvatarBorderWidth = StyleUtils.getAvatarBorderSize(props.size);
+    const oneAvatarBorderWidth = StyleUtils.getAvatarBorderWidth(props.size);
     const overlapSize = oneAvatarSize.width / 3;
 
     if (props.shouldStackHorizontally) {
@@ -89,7 +92,7 @@ const MultipleAvatars = (props) => {
         if (props.icons.length > 4) {
             width = (oneAvatarSize.width * 3) + (oneAvatarBorderWidth * 8);
         } else {
-            width = oneAvatarSize.width + (overlapSize * 2 * (props.icons.length - 1)) + (oneAvatarBorderWidth * (props.icons.length * 2))
+            width = oneAvatarSize.width + (overlapSize * 2 * (props.icons.length - 1)) + (oneAvatarBorderWidth * (props.icons.length * 2));
         }
         avatarContainerStyles = StyleUtils.combineStyles([
             styles.alignItemsCenter,
@@ -115,12 +118,15 @@ const MultipleAvatars = (props) => {
                                     {
                                         left: -(overlapSize * index), borderRadius: oneAvatarSize.width, borderWidth: oneAvatarBorderWidth, zIndex: index + 2,
                                     },
+                                    (icon.type === CONST.ICON_TYPE_WORKSPACE ? StyleUtils.getAvatarBorderRadius(props.size, props.icons[3].type) : {}),
                                 ]}
                             >
                                 <Avatar
-                                    source={icon || props.fallbackIcon}
+                                    source={icon.source || props.fallbackIcon}
                                     fill={themeColors.iconSuccessFill}
                                     size={props.size}
+                                    name={icon.name}
+                                    type={icon.type}
                                 />
                             </View>
                         ))
@@ -138,6 +144,7 @@ const MultipleAvatars = (props) => {
                                 {
                                     borderWidth: oneAvatarBorderWidth, borderRadius: oneAvatarSize.width, left: -((oneAvatarSize.width * 2) + (oneAvatarBorderWidth * 2)), zIndex: 6,
                                 },
+                                (props.icons[3].type === CONST.ICON_TYPE_WORKSPACE ? StyleUtils.getAvatarBorderRadius(props.size, props.icons[3].type) : {}),
                             ]}
                         >
                             <View
@@ -168,11 +175,13 @@ const MultipleAvatars = (props) => {
                         {/* View is necessary for tooltip to show for multiple avatars in LHN */}
                         <View>
                             <Avatar
-                                source={props.icons[0] || props.fallbackIcon}
+                                source={props.icons[0].source || props.fallbackIcon}
                                 fill={themeColors.iconSuccessFill}
                                 size={props.isFocusMode ? CONST.AVATAR_SIZE.MID_SUBSCRIPT : CONST.AVATAR_SIZE.SMALLER}
 
                                 imageStyles={[singleAvatarStyles]}
+                                name={props.icons[0].name}
+                                type={props.icons[0].type}
                             />
                         </View>
                     </Tooltip>
@@ -183,11 +192,13 @@ const MultipleAvatars = (props) => {
                             <Tooltip text={props.avatarTooltips[1]} absolute>
                                 <View>
                                     <Avatar
-                                        source={props.icons[1] || props.fallbackIcon}
+                                        source={props.icons[1].source || props.fallbackIcon}
                                         fill={themeColors.iconSuccessFill}
                                         size={props.isFocusMode ? CONST.AVATAR_SIZE.MID_SUBSCRIPT : CONST.AVATAR_SIZE.SMALLER}
 
                                         imageStyles={[singleAvatarStyles]}
+                                        name={props.icons[1].name}
+                                        type={props.icons[1].type}
                                     />
                                 </View>
                             </Tooltip>
