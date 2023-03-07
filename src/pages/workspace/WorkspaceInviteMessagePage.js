@@ -89,7 +89,11 @@ class WorkspaceInviteMessagePage extends React.Component {
 
     getAvatars() {
         const filteredPersonalDetails = _.pick(this.props.personalDetails, this.props.invitedMembersDraft);
-        return _.map(filteredPersonalDetails, personalDetail => ReportUtils.getAvatar(personalDetail.avatar, personalDetail.login));
+        return _.map(filteredPersonalDetails, personalDetail => ({
+            source: ReportUtils.getAvatar(personalDetail.avatar, personalDetail.login),
+            type: CONST.ICON_TYPE_AVATAR,
+            name: personalDetail.login,
+        }));
     }
 
     getWelcomeNote() {

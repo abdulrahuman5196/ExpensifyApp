@@ -88,10 +88,14 @@ const MultipleAvatars = (props) => {
 
     if (props.shouldStackHorizontally) {
         let width;
+
+        // Height of one avatar + border space
         const height = oneAvatarSize.height + (2 * oneAvatarBorderWidth);
         if (props.icons.length > 4) {
+            // Width of overlapping avatars + border space
             width = (oneAvatarSize.width * 3) + (oneAvatarBorderWidth * 8);
         } else {
+            // one avatar width + overlaping avatar sizes + border space
             width = oneAvatarSize.width + (overlapSize * 2 * (props.icons.length - 1)) + (oneAvatarBorderWidth * (props.icons.length * 2));
         }
         avatarContainerStyles = StyleUtils.combineStyles([
@@ -118,7 +122,7 @@ const MultipleAvatars = (props) => {
                                     {
                                         left: -(overlapSize * index), borderRadius: oneAvatarSize.width, borderWidth: oneAvatarBorderWidth, zIndex: index + 2,
                                     },
-                                    (icon.type === CONST.ICON_TYPE_WORKSPACE ? StyleUtils.getAvatarBorderRadius(props.size, props.icons[3].type) : {}),
+                                    (icon.type === CONST.ICON_TYPE_WORKSPACE ? StyleUtils.getAvatarBorderRadius(props.size, icon.type) : {}),
                                 ]}
                             >
                                 <Avatar

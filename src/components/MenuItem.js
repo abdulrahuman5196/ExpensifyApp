@@ -66,6 +66,8 @@ const MenuItem = (props) => {
         styles.lineHeightNormal,
     ], props.style);
 
+    const fallbackAvatarSize = (props.viewMode === CONST.OPTION_MODE.COMPACT) ? CONST.AVATAR_SIZE.SMALL : CONST.AVATAR_SIZE.DEFAULT;
+
     return (
         <Pressable
             onPress={(e) => {
@@ -179,7 +181,7 @@ const MenuItem = (props) => {
                                     isHovered={hovered}
                                     isPressed={pressed}
                                     icons={props.floatRightAvatars}
-                                    size={props.avatarSize ? props.avatarSize : (props.viewMode === CONST.OPTION_MODE.COMPACT ? CONST.AVATAR_SIZE.SMALL : CONST.AVATAR_SIZE.DEFAULT)}
+                                    size={props.avatarSize ? props.avatarSize : fallbackAvatarSize}
                                     fallbackIcon={defaultWorkspaceAvatars.WorkspaceBuilding}
                                     shouldStackHorizontally={props.shouldStackHorizontally}
                                 />
