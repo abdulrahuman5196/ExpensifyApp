@@ -1008,10 +1008,9 @@ export default {
             pleaseEnterValidLogin: `Asegúrese de que el correo electrónico o el número de teléfono sean válidos (p. ej. ${CONST.EXAMPLE_PHONE_NUMBER}).`,
         },
         inviteMessage: {
-            // Need to add translations
-            inviteMessageTitle: 'Add message',
-            inviteMessagePrompt: 'Make your invitation extra special by adding a message below',
-            personalMessagePrompt: 'Message',
+            inviteMessageTitle: 'Añadir un mensaje',
+            inviteMessagePrompt: 'Añadir un mensaje para hacer tu invitación destacar',
+            personalMessagePrompt: 'Mensaje',
             genericFailureMessage: 'Se produjo un error al invitar al usuario al espacio de trabajo. Vuelva a intentarlo..',
             welcomeNote: ({workspaceName}) => `¡Has sido invitado a ${workspaceName}! Descargue la aplicación móvil Expensify en use.expensify.com/download para comenzar a rastrear sus gastos.`,
         },
